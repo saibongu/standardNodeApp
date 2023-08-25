@@ -15,8 +15,6 @@ router.get('/', function(req, res, next) {
 
 
 // users Registration API's
-// router.get('/listofusers',cors(corsOptions),service.getUsersData)
-
 router.get('/listofusers', cors(corsOptions), async (req, res) => {
   try {
       const usersData = await service.getUsersData(); 
@@ -32,7 +30,6 @@ router.post('/postuserdata',cors(corsOptions),service.postUsersData)
 
 
 // selected fields of get api for tables (id, firstName, email,phoneNumber,age)
-// router.get('/usersData',cors(corsOptions),service.getUsersTableData)
 router.get('/usersData', cors(corsOptions), async (req, res) => {
   try {
       const usersData = await service.getUsersTableData(); 
@@ -41,9 +38,6 @@ router.get('/usersData', cors(corsOptions), async (req, res) => {
       res.status(500).json({ error: 'An error occurred while fetching user data.' });
   }
 });
-
-
-
 
 
 //sending total data as a based on username and password
