@@ -43,6 +43,9 @@ router.get('/usersData', cors(corsOptions), async (req, res) => {
 //sending total data as a based on username and password
 router.post('/login',cors(corsOptions),service.loginResponseData)
 
+router.put('/updateTableData/:id',cors(corsOptions),service.updateTabledata)
+router.get('/chartsdata',cors(corsOptions),service.chartData)
 
+router.put('/delete/:id',cors(corsOptions),service.deleteUser)
 
 module.exports = router;

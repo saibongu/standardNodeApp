@@ -121,7 +121,65 @@ const getUsersTableData = async () => {
 
 }
     
+//update data
+
+var updateTabledata = (req, res) => {
+    var id = req.params.id
+    var firstName = req.body.firstName
+    var email = req.body.email
+    var phoneNumber = req.body.phoneNumber
+    var age = req.body.age
+    
+
+
+    let sql = "UPDATE usersdata set firstName=?, email=?, phoneNumber=?, age=? where id=?";
+
+    connection.query(sql, [firstName, email, phoneNumber, age, id], function (err, data) {
+
+        if (!err) {
+            res.send(data)
+        }
+        else {
+            res.send(err)
+        }
+    }
+    )
+}
+
+//charts data
+var chartData = function (req, res) {
+    let query = "select *from charts"
+    connection.query(query, function (err, data) {
+        if (!err) {
+            //    res.send(data)
+            const resp = {
+                'status': 'charts data get successfully',
+                'responese': data
+            }
+            res.send(resp.responese)
+        }
+        else {
+            res.status(400).send(err)
+        }
+    })
+}
+
+
+//delete data baed on id
+var deleteUser = function (req, res) {
+    console.log("delete", req.params.id)
+    var delquery = "DELETE FROM usersdata WHERE id=" + req.params.id;
+    connection.query(delquery, (err) => {
+
+        if (!err) {
+            res.send("Deleted sucessfully")
+        }
+        else {
+            console.log(err);
+        }
+    });
+}
 
 
 
-module.exports = {getUsersData:getUsersData, getUsersTableData:getUsersTableData, postUsersData: postUsersData,loginResponseData:loginResponseData}
+module.exports = {deleteUser:deleteUser,chartData:chartData,updateTabledata:updateTabledata,getUsersData:getUsersData, getUsersTableData:getUsersTableData, postUsersData: postUsersData,loginResponseData:loginResponseData}
