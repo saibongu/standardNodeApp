@@ -54,4 +54,12 @@ router.get('/getBarChartData',cors(corsOptions), service.getBarChartData);
 router.post('/postPieChartData',cors(corsOptions) ,service.postPieChartData);
 router.get('/getPieChartData',cors(corsOptions), service.getPieChartData);
 
+//tabs
+router.post('/postTabsData',cors(corsOptions) ,service.postTabsData);
+router.get('/getTabsData',cors(corsOptions), service.getTabsData);
+
+//card
+//tabs
+router.post('/postCardData',cors(corsOptions) ,service.postCardData);
+router.get('/getCardData',cors(corsOptions), service.getCardData);
 module.exports = router;

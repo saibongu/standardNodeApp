@@ -240,6 +240,82 @@ const getPieChartData = (req, res) => {
   };
 
 
+//tabs
+  const postTabsData = (req, res) => {
+    const jsonData = JSON.stringify(req.body);
+    const query = `INSERT INTO tabs (json_data) VALUES (?)`;
+  
+    connection.query(query, [jsonData], (err, data) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
+      }
+  
+      const response = {
+        status: 'JSON data inserted successfully',
+        data,
+      };
+      res.status(200).json(response);
+    });
+  };
+
+
+  //get tabs
+  const getTabsData = (req, res) => {
+    const query = 'SELECT * FROM tabs';
+  
+    connection.query(query, (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+      }
+  
+      // Assuming your MySQL table has a JSON column named 'json_data'
+      // Modify this part to extract the specific data you want if needed
+      const jsonData = rows.map((row) => JSON.parse(row.json_data));
+  
+      res.status(200).json(jsonData);
+    });
+  };
+
+//cards
+const postCardData = (req, res) => {
+    const jsonData = JSON.stringify(req.body);
+    const query = `INSERT INTO card (json_data) VALUES (?)`;
+  
+    connection.query(query, [jsonData], (err, data) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
+      }
+  
+      const response = {
+        status: 'JSON data inserted successfully',
+        data,
+      };
+      res.status(200).json(response);
+    });
+  };
+
+
+  //get card
+  const getCardData = (req, res) => {
+    const query = 'SELECT * FROM card';
+  
+    connection.query(query, (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+      }
+  
+      // Assuming your MySQL table has a JSON column named 'json_data'
+      // Modify this part to extract the specific data you want if needed
+      const jsonData = rows.map((row) => JSON.parse(row.json_data));
+  
+      res.status(200).json(jsonData);
+    });
+  };
+
 
 module.exports = {
     getPieChartData,
@@ -251,5 +327,9 @@ module.exports = {
     getUsersData,
     getUsersTableData,
     postUsersData,
-    loginResponseData
+    loginResponseData,
+    postTabsData,
+    getTabsData,
+    getCardData,
+    postCardData
 }
