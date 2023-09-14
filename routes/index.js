@@ -44,8 +44,14 @@ router.get('/usersData', cors(corsOptions), async (req, res) => {
 router.post('/login',cors(corsOptions),service.loginResponseData)
 
 router.put('/updateTableData/:id',cors(corsOptions),service.updateTabledata)
-router.get('/chartsdata',cors(corsOptions),service.chartData)
+
 
 router.put('/delete/:id',cors(corsOptions),service.deleteUser)
+
+router.post('/postBarChartData',cors(corsOptions) ,service.postBarChartData);
+router.get('/getBarChartData',cors(corsOptions), service.getBarChartData);
+
+router.post('/postPieChartData',cors(corsOptions) ,service.postPieChartData);
+router.get('/getPieChartData',cors(corsOptions), service.getPieChartData);
 
 module.exports = router;
