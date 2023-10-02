@@ -1,0 +1,10 @@
+
+{
+    "tables": {
+        "usersData": "usersdata",
+        "barcharts": "barcharts",
+        "piecharts":"piecharts",
+        "tabs": "tabs",
+        "card":"card"  
+    }
+}
