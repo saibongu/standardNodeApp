@@ -2,154 +2,231 @@ const connection = require("../connections/db")
 const config = require('../tables.json');
 
 //post query for bar charts
-const postBarChartData = (req, res) => {
-    const jsonData = JSON.stringify(req.body);
-    const query = `INSERT INTO ${config.tables.barcharts} (json_data) VALUES (?)`;
-  
-    connection.query(query, [jsonData], (err, data) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
-      }
+const postBarChartData = async (req, res) => {
+  try {
+      const jsonData = JSON.stringify(req.body);
+      const query = `INSERT INTO ${config.tables.barcharts} (json_data) VALUES (?)`;
+      
+      await new Promise((resolve, reject) => {
+          connection.query(query, [jsonData], (err, data) => {
+              if (err) {
+                  console.error(err);
+                  reject('Failed to insert JSON data.');
+              } else {
+                  resolve(data);
+              }
+          });
+      });
+
       const response = {
-        status: 'JSON data inserted successfully',
-        data,
+          status: 'JSON data inserted successfully',
+          data: jsonData,
       };
+
       res.status(200).json(response);
-    });
-  };
-  
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
+  }
+};
+ 
   //Get bar chart data 
-  const getBarChartData = (req, res) => {
-    const query = `SELECT * FROM ${config.tables.barcharts}`;
-  
-    connection.query(query, (err, rows) => {
-      if (err) {
+  const getBarChartData = async (req, res) => {
+    try {
+        const query = `SELECT * FROM ${config.tables.barcharts}`;
+        const rows = await new Promise((resolve, reject) => {
+            connection.query(query, (err, rows) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to retrieve data from MySQL.');
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+
+        // Assuming your MySQL table has a JSON column named 'json_data'
+        // Modify this part to extract the specific data you want if needed
+        const jsonData = rows.map((row) => JSON.parse(row.json_data));
+
+        res.status(200).json(jsonData);
+    } catch (err) {
         console.error(err);
-        return res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
-      }
-  
-      // Assuming your MySQL table has a JSON column named 'json_data'
-      // Modify this part to extract the specific data you want if needed
-      const jsonData = rows.map((row) => JSON.parse(row.json_data));
-  
-      res.status(200).json(jsonData);
-    });
-  };
+        res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+    }
+};
+
   
   //post data for pie charts
-  const postPieChartData = (req, res) => {
-      const jsonData = JSON.stringify(req.body);
-      const query = `INSERT INTO ${config.tables.piecharts} (json_data) VALUES (?)`;
-    
-      connection.query(query, [jsonData], (err, data) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
-        }
-    
+  const postPieChartData = async (req, res) => {
+    try {
+        const jsonData = JSON.stringify(req.body);
+        const query = `INSERT INTO ${config.tables.piecharts} (json_data) VALUES (?)`;
+        
+        await new Promise((resolve, reject) => {
+            connection.query(query, [jsonData], (err, data) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to insert JSON data.');
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+  
         const response = {
-          status: 'JSON data inserted successfully',
-          data,
+            status: 'JSON data inserted successfully',
+            data: jsonData,
         };
+  
         res.status(200).json(response);
-      });
-    };
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
+    }
+  };
   
   //get pie chart data
   
-  const getPieChartData = (req, res) => {
-      const query = `SELECT * FROM ${config.tables.piecharts}`;
-    
-      connection.query(query, (err, rows) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
-        }
-    
+  const getPieChartData = async (req, res) => {
+    try {
+        const query = `SELECT * FROM ${config.tables.piechartscharts}`;
+        const rows = await new Promise((resolve, reject) => {
+            connection.query(query, (err, rows) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to retrieve data from MySQL.');
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+
         // Assuming your MySQL table has a JSON column named 'json_data'
         // Modify this part to extract the specific data you want if needed
         const jsonData = rows.map((row) => JSON.parse(row.json_data));
-    
+
         res.status(200).json(jsonData);
-      });
-    };
-  
-  
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+    }
+};
+   
   //tabs
-    const postTabsData = (req, res) => {
-      const jsonData = JSON.stringify(req.body);
-      const query = `INSERT INTO ${config.tables.tabs} (json_data) VALUES (?)`;
-    
-      connection.query(query, [jsonData], (err, data) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
-        }
-    
+  const postTabsData = async (req, res) => {
+    try {
+        const jsonData = JSON.stringify(req.body);
+        const query = `INSERT INTO ${config.tables.tabs} (json_data) VALUES (?)`;
+        
+        const data = await new Promise((resolve, reject) => {
+            connection.query(query, [jsonData], (err, data) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to insert JSON data.');
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+
         const response = {
-          status: 'JSON data inserted successfully',
-          data,
+            status: 'JSON data inserted successfully',
+            data,
         };
+
         res.status(200).json(response);
-      });
-    };
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
+    }
+};
+
+
+
   
   
     //get tabs
-    const getTabsData = (req, res) => {
-      const query = 'SELECT * FROM ${config.tables.tabs}';
-    
-      connection.query(query, (err, rows) => {
-        if (err) {
+    const getTabsData = async (req, res) => {
+      try {
+          const query = `SELECT * FROM ${config.tables.tabs}`;
+          const rows = await new Promise((resolve, reject) => {
+              connection.query(query, (err, rows) => {
+                  if (err) {
+                      console.error(err);
+                      reject('Failed to retrieve data from MySQL.');
+                  } else {
+                      resolve(rows);
+                  }
+              });
+          });
+  
+          // Modify this part to extract the specific data you want if needed
+          const jsonData = rows.map((row) => JSON.parse(row.json_data));
+  
+          res.status(200).json(jsonData);
+      } catch (err) {
           console.error(err);
-          return res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
-        }
-    
-        // Modify this part to extract the specific data you want if needed
-        const jsonData = rows.map((row) => JSON.parse(row.json_data));
-    
-        res.status(200).json(jsonData);
-      });
-    };
+          res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+      }
+  };
   
   //cards
-  const postCardData = (req, res) => {
-      const jsonData = JSON.stringify(req.body);
-      const query = `INSERT INTO ${config.tables.card} (json_data) VALUES (?)`;
-    
-      connection.query(query, [jsonData], (err, data) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
-        }
-    
+  const postCardData = async (req, res) => {
+    try {
+        const jsonData = JSON.stringify(req.body);
+        const query = `INSERT INTO ${config.tables.card} (json_data) VALUES (?)`;
+
+        const data = await new Promise((resolve, reject) => {
+            connection.query(query, [jsonData], (err, data) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to insert JSON data.');
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+
         const response = {
-          status: 'JSON data inserted successfully',
-          data,
+            status: 'JSON data inserted successfully',
+            data,
         };
+
         res.status(200).json(response);
-      });
-    };
-  
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
+    }
+};
   
     //get card 
-    const getCardData = (req, res) => {
-      const query = 'SELECT * FROM ${config.tables.card}';
-    
-      connection.query(query, (err, rows) => {
-        if (err) {
+    const getCardData = async (req, res) => {
+      try {
+          const query = `SELECT * FROM ${config.tables.card}`;
+          const rows = await new Promise((resolve, reject) => {
+              connection.query(query, (err, rows) => {
+                  if (err) {
+                      console.error(err);
+                      reject('Failed to retrieve data from MySQL.');
+                  } else {
+                      resolve(rows);
+                  }
+              });
+          });
+  
+          // Assuming your MySQL table has a JSON column named 'json_data'
+          // Modify this part to extract the specific data you want if needed
+          const jsonData = rows.map((row) => JSON.parse(row.json_data));
+  
+          res.status(200).json(jsonData);
+      } catch (err) {
           console.error(err);
-          return res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
-        }
-    
-        // Assuming your MySQL table has a JSON column named 'json_data'
-        // Modify this part to extract the specific data you want if needed
-        const jsonData = rows.map((row) => JSON.parse(row.json_data));
-    
-        res.status(200).json(jsonData);
-      });
-    };
+          res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+      }
+  };
+  
+  
 
 
     module.exports = {
