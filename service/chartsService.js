@@ -30,6 +30,7 @@ const postBarChartData = async (req, res) => {
   }
 };
  
+
   //Get bar chart data 
   const getBarChartData = async (req, res) => {
     try {
@@ -45,8 +46,6 @@ const postBarChartData = async (req, res) => {
             });
         });
 
-        // Assuming your MySQL table has a JSON column named 'json_data'
-        // Modify this part to extract the specific data you want if needed
         const jsonData = rows.map((row) => JSON.parse(row.json_data));
 
         res.status(200).json(jsonData);
@@ -90,7 +89,7 @@ const postBarChartData = async (req, res) => {
   
   const getPieChartData = async (req, res) => {
     try {
-        const query = `SELECT * FROM ${config.tables.piechartscharts}`;
+        const query = `SELECT * FROM ${config.tables.piecharts}`;
         const rows = await new Promise((resolve, reject) => {
             connection.query(query, (err, rows) => {
                 if (err) {
@@ -102,8 +101,6 @@ const postBarChartData = async (req, res) => {
             });
         });
 
-        // Assuming your MySQL table has a JSON column named 'json_data'
-        // Modify this part to extract the specific data you want if needed
         const jsonData = rows.map((row) => JSON.parse(row.json_data));
 
         res.status(200).json(jsonData);
@@ -161,7 +158,6 @@ const postBarChartData = async (req, res) => {
               });
           });
   
-          // Modify this part to extract the specific data you want if needed
           const jsonData = rows.map((row) => JSON.parse(row.json_data));
   
           res.status(200).json(jsonData);
@@ -214,9 +210,7 @@ const postBarChartData = async (req, res) => {
                   }
               });
           });
-  
-          // Assuming your MySQL table has a JSON column named 'json_data'
-          // Modify this part to extract the specific data you want if needed
+
           const jsonData = rows.map((row) => JSON.parse(row.json_data));
   
           res.status(200).json(jsonData);

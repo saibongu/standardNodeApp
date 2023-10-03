@@ -71,7 +71,7 @@ const config = require('../tables.json');
 
 
 //user login 
- const loginResponseData = async (req, res) => {
+const loginResponseData = async (req, res) => {
     const { userName, password } = req.body;
 
     const query = `SELECT * FROM ${config.tables.usersData} WHERE userName = ?`;
@@ -101,7 +101,7 @@ const config = require('../tables.json');
                     status: 'success',
                     response: result
                 };
-                return res.send(data);
+                return res.send(data); // Send the response and return from the function
             } else {
                 return res.status(401).send({ msg: 'Please enter valid username and password' });
             }
@@ -168,7 +168,7 @@ const config = require('../tables.json');
             });
         });
 
-        res.send('Record updated successfully');
+        return 'Record updated successfully';
     } catch (err) {
         console.error(err);
         res.status(500).send(err);

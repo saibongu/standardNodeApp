@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
-// var service=require('../service/chartsService');
+
 var service=require('../service/usersService');
 var cors = require('cors');
 const app = require('../app');
+
+
+
+
 router.use(cors())
 
 var corsOptions =
@@ -27,7 +31,7 @@ router.get('/listofusers', cors(corsOptions), async (req, res) => {
 
 router.post('/postuserdata', cors(corsOptions), async (req, res) => {
   try {
-      const usersData = await service.postUsersData(); 
+      const usersData = await service.postUsersData(req, res); 
       res.status(200).json(usersData);
   } catch (error) {
       res.status(500).json({ error: 'An error occurred while fetching user data.' });
@@ -37,7 +41,7 @@ router.post('/postuserdata', cors(corsOptions), async (req, res) => {
 // selected fields of get api for tables (id, firstName, email,phoneNumber,age)
 router.get('/usersData', cors(corsOptions), async (req, res) => {
   try {
-      const usersData = await service.getUsersTableData(); 
+      const usersData = await service.getUsersTableData(req,res); 
       res.status(200).json(usersData);
   } catch (error) {
       res.status(500).json({ error: 'An error occurred while fetching user data.' });
@@ -47,26 +51,34 @@ router.get('/usersData', cors(corsOptions), async (req, res) => {
 //sending total data as a based on username and password
 router.post('/login', cors(corsOptions), async (req, res) => {
   try {
-      const usersData = await service.loginResponseData(); 
-      res.status(200).json(usersData);
+      const { userName, password } = req.body;
+      const loginResult = await service.loginResponseData(userName, password);
+
+      if (loginResult.status === 200) {
+          res.status(200).json({ status: 'success', data: loginResult.data });
+      } else {
+          res.status(loginResult.status).json({ status: 'error', message: loginResult.message });
+      }
   } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching user data.' });
+      console.error(error);
+      res.status(500).json({ status: 'error', message: 'An error occurred while processing your request.' });
   }
 });
+
 
 router.put('/updateTableData/:id', cors(corsOptions), async (req, res) => {
   try {
-      const usersData = await service.updateTabledata(); 
+      const usersData = await service.updateTabledata(req,res); 
       res.status(200).json(usersData);
   } catch (error) {
       res.status(500).json({ error: 'An error occurred while fetching user data.' });
   }
 });
 
-// router.delete('/delete/:id',cors(corsOptions),service.deleteUser)
+
 router.delete('/delete/:id', cors(corsOptions), async (req, res) => {
   try {
-      const usersData = await service.deleteUser(); 
+      const usersData = await service.deleteUser(req,res); 
       res.status(200).json(usersData);
   } catch (error) {
       res.status(500).json({ error: 'An error occurred while fetching user data.' });

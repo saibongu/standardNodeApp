@@ -1,5 +1,5 @@
 const mysql = require('mysql')
-const config=require('../config.json')
+const config=require('../dbconfig.json')
 
 var connection = mysql.createConnection({
     host: config.MYSQL_HOST,
