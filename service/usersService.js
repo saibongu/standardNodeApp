@@ -2,9 +2,8 @@ const connection = require("../connections/db")
 const bcrypt = require('bcrypt');
 const config = require('../tables.json');
 
-
 //get all users data 
- const getUsersData = async () => {
+const getUsersData = async () => {
     try {
         let sqlQuery = `SELECT * FROM ${config.tables.usersData}`;
         return new Promise((resolve, reject) => {
@@ -24,8 +23,7 @@ const config = require('../tables.json');
 };
 
 //posting users
-
- const postUsersData = async (req, res) => {
+const postUsersData = async (req, res) => {
     const saltRounds = 10;
 
     try {
@@ -69,7 +67,6 @@ const config = require('../tables.json');
     }
 };
 
-
 //user login 
 const loginResponseData = async (req, res) => {
     const { userName, password } = req.body;
@@ -88,7 +85,7 @@ const loginResponseData = async (req, res) => {
         });
 
         if (result.length === 0) {
-            return res.status(401).send({ msg: 'Please enter valid username and password' });
+            return res.status(401).send('Please enter valid username and password');
         }
 
         const hashedPasswordFromDb = result[0].password;
@@ -101,23 +98,22 @@ const loginResponseData = async (req, res) => {
                     status: 'success',
                     response: result
                 };
-                return res.send(data); // Send the response and return from the function
+                res.send(data); // Send the response and return from the function
             } else {
-                return res.status(401).send({ msg: 'Please enter valid username and password' });
+                res.status(401).send('Please enter valid username and password');
             }
         } catch (compareErr) {
             console.error(compareErr);
-            return res.status(500).send({ msg: 'Error comparing passwords' });
+            res.status(500).send('Error comparing passwords');
         }
     } catch (err) {
         console.error(err);
-        return res.status(400).send({ msg: err });
+        res.status(400).send({ msg: err });
     }
 };
 
-
 // get table data 
- const getUsersTableData = async () => {
+const getUsersTableData = async () => {
     try {
         console.log("getUsersTableData was called")
 
@@ -130,20 +126,19 @@ const loginResponseData = async (req, res) => {
                     reject(err);
                 } else {
                     let response = JSON.parse(JSON.stringify(results));
-                     console.log("getUsersTableData function", response);
+                    console.log("getUsersTableData function", response);
                     resolve(results);
                 }
             });
         })
     } catch (err) {
         console.log("Error while calling function", err);
-         throw error;
+        throw error;
     }
-
 }
-    
+
 //update data
- const updateTabledata = async (req, res) => {
+const updateTabledata = async (req, res) => {
     try {
         let id = req.params.id;
         let firstName = req.body.firstName;
@@ -175,9 +170,8 @@ const loginResponseData = async (req, res) => {
     }
 };
 
-
 //delete data based on id
- const deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
     try {
         console.log("delete", req.params.id);
         let delquery = `DELETE FROM ${config.tables.usersData} WHERE id = ?`;
@@ -200,12 +194,11 @@ const loginResponseData = async (req, res) => {
 };
 
 module.exports = {
-   
     deleteUser,
     updateTabledata,
     postUsersData,
     loginResponseData,
     getUsersData,
     getUsersTableData
-    
+
 }

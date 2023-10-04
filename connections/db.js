@@ -1,5 +1,5 @@
 const mysql = require('mysql')
-const config=require('../dbconfig.json')
+const config = require('../dbconfig.json')
 
 var connection = mysql.createConnection({
     host: config.MYSQL_HOST,
@@ -18,4 +18,4 @@ connection.connect(function (err) {
     }
 })
 
-module.exports=connection
+module.exports = connection
