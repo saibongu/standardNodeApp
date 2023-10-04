@@ -40,7 +40,7 @@ router.get('/getBarChartData', cors(corsOptions), async (req, res) => {
 
 
 
-router.get('/postPieChartData', cors(corsOptions), async (req, res) => {
+router.post('/postPieChartData', cors(corsOptions), async (req, res) => {
   try {
       const usersData = await service.postPieChartData(req, res); 
       res.status(200).json(usersData);
@@ -65,7 +65,7 @@ router.get('/getPieChartData', cors(corsOptions), async (req, res) => {
 
 //tabs
 
-router.get('/postTabsData', cors(corsOptions), async (req, res) => {
+router.post('/postTabsData', cors(corsOptions), async (req, res) => {
   try {
       const usersData = await service.postTabsData(req, res); 
       res.status(200).json(usersData);
@@ -89,7 +89,7 @@ router.get('/getTabsData', cors(corsOptions), async (req, res) => {
 
 //cards
 
-router.get('/postCardData', cors(corsOptions), async (req, res) => {
+router.post('/postCardData', cors(corsOptions), async (req, res) => {
   try {
       const usersData = await service.postCardData(req, res); 
       res.status(200).json(usersData);
