@@ -3,6 +3,8 @@ var router = express.Router();
 var service = require('../service/chartsService');
 var cors = require('cors');
 const app = require('../app');
+
+
 router.use(cors())
 var corsOptions =
 {
@@ -13,6 +15,14 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.post('/postImagePath', cors(corsOptions), service.upload.single('image'), async (req, res) => {
+  try {
+    const usersData = await service.postImage(req, res);
+    res.status(200).json(usersData);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching user data.' });
+  }
+});
 //post-barChart
 router.post('/postBarChartData', cors(corsOptions), async (req, res) => {
   try {
@@ -92,5 +102,33 @@ router.get('/getCardData', cors(corsOptions), async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching user data.' });
   }
 });
+
+
+//image base64
+router.post('/upload', async (req, res) => {
+  try {
+    const base64Image = req.body.base64Image;
+    const response = await service.uploadImage(base64Image);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.get('/getImages', async (req, res) => {
+  try {
+    const images = await service.getAllImages();
+    res.status(200).json(images);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
 
 module.exports = router;

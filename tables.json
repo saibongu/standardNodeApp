@@ -5,6 +5,7 @@
         "barcharts": "barcharts",
         "piecharts":"piecharts",
         "tabs": "tabs",
-        "card":"card"  
+        "card":"card"  ,
+        "images":"images"
     }
 }

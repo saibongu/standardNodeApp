@@ -1,6 +1,14 @@
 const connection = require("../connections/db")
 const bcrypt = require('bcrypt');
 const config = require('../tables.json');
+const multer = require('multer');
+const path = require('path');
+
+require('dotenv').config(); // Load environment variables from .env file
+
+
+
+const upload = multer({ dest: 'uploads/' }); // Destination folder for uploaded files
 
 //get all users data 
 const getUsersData = async () => {
@@ -22,12 +30,12 @@ const getUsersData = async () => {
     }
 };
 
-//posting users
+// posting users
 const postUsersData = async (req, res) => {
-    const saltRounds = 10;
+    const saltRounds = process.env.SALT_ROUNDS ;
 
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        const hashedPassword = await bcrypt.hash(req.body.password,parseInt(saltRounds));
 
         const query = `INSERT INTO ${config.tables.usersData} 
         (firstName, lastName, email, phoneNumber, alternativeNumber, age, userName, password) 
@@ -89,6 +97,7 @@ const loginResponseData = async (req, res) => {
         }
 
         const hashedPasswordFromDb = result[0].password;
+        
 
         try {
             const passwordMatch = await bcrypt.compare(password, hashedPasswordFromDb);
@@ -98,8 +107,7 @@ const loginResponseData = async (req, res) => {
                     status: 'success',
                     response: result
                 };
-                res.send(data); // Send the response and return from the function
-            } else {
+                res.send(data); 
                 res.status(401).send('Please enter valid username and password');
             }
         } catch (compareErr) {
@@ -112,7 +120,54 @@ const loginResponseData = async (req, res) => {
     }
 };
 
+
+// const loginResponseData = async (req, res) => {
+//     const { userName, password } = req.body;
+
+//     const query = `SELECT * FROM ${config.tables.usersData} WHERE userName = ?`;
+
+//     try {
+//         const result = await new Promise((resolve, reject) => {
+//             connection.query(query, [userName], (err, result) => {
+//                 if (err) {
+//                     reject(err);
+//                 } else {
+//                     resolve(result);
+//                 }
+//             });
+//         });
+
+//         if (result.length === 0) {
+//             return res.status(401).send('Please enter valid username and password');
+//         }
+
+//         const hashedPasswordFromDb = result[0].password;
+
+//         try {
+//             const passwordMatch = await bcrypt.compare(password, hashedPasswordFromDb);
+
+//             if (passwordMatch) {
+//                 const data = {
+//                     status: 'success',
+//                     response: result
+//                 };
+//                 res.send(data); // Send the response here
+//             } else {
+//                 res.status(401).send('Please enter valid username and password'); // Send the error response here
+//             }
+//         } catch (compareErr) {
+//             console.error(compareErr);
+//             res.status(500).send('Error comparing passwords');
+//         }
+//     } catch (err) {
+//         console.error(err);
+//         res.status(400).send({ msg: err });
+//     }
+// };
+
 // get table data 
+
+
 const getUsersTableData = async () => {
     try {
         console.log("getUsersTableData was called")

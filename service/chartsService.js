@@ -1,5 +1,55 @@
+const { log } = require("console");
 const connection = require("../connections/db")
 const config = require('../tables.json');
+const multer = require('multer');
+const path = require('path');
+
+
+//image upload
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Destination folder for storing uploaded images
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, uniqueSuffix + ext); // File name will be unique timestamp + original file extension
+    }
+});
+
+const upload = multer({ storage: storage });
+
+const postImage = async (req, res) => {
+    try {
+        const imageFile = req.file; // Assuming you are using 'image' field for file upload in your form
+        console.log(imageFile);
+        const imagePath = imageFile ? 'uploads/' + imageFile.filename : null; // Image path to be stored in the database
+        const query = `INSERT INTO ${config.tables.images} (image_path) VALUES (?)`;
+
+        const data = await new Promise((resolve, reject) => {
+            connection.query(query, [imagePath], (err, data) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to insert data.');
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+
+        const response = {
+            status: 'Data inserted successfully',
+            data,
+        };
+
+        res.status(200).json(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'Error', message: 'Failed to insert data.' });
+    }
+};
+
 
 //post-bar charts
 const postBarChartData = async (req, res) => {
@@ -212,6 +262,37 @@ const getCardData = async (req, res) => {
     }
 };
 
+///base 64 image
+
+
+async function uploadImage(base64Image) {
+  try {
+    const binaryImage = Buffer.from(base64Image, 'base64');
+    // const connection = await pool.getConnection();
+    await connection.query('INSERT INTO imagees (data) VALUES (?)', [binaryImage]);
+    // connection.release();
+    return { message: 'Image uploaded successfully' };
+  } catch (error) {
+    console.error(error);
+    throw new Error('Internal Server Error');
+  }
+}
+
+
+async function getAllImages() {
+  try {
+    // const connection = await pool.getConnection();
+    const [rows] = await connection.query('SELECT * FROM imagees');
+  
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Internal Server Error');
+  }
+}
+
+
+
 module.exports = {
     getPieChartData,
     postPieChartData,
@@ -221,4 +302,7 @@ module.exports = {
     getTabsData,
     getCardData,
     postCardData,
+    postImage,
+    upload,uploadImage,
+    getAllImages
 }

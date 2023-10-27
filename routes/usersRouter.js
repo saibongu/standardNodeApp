@@ -2,8 +2,12 @@ var express = require('express');
 var router = express.Router();
 var service = require('../service/usersService');
 var cors = require('cors');
+const multer = require('multer');
 const app = require('../app');
+
+const upload = multer({ dest: 'uploads/' }); // Destination folder for uploaded files
 router.use(cors())
+
 var corsOptions =
 {
     origin: '*'
@@ -29,7 +33,8 @@ router.post('/postuserdata', cors(corsOptions), async (req, res) => {
         const usersData = await service.postUsersData(req, res);
         res.status(200).json(usersData);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching user data.' });
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while processing user data.' });
     }
 });
 
