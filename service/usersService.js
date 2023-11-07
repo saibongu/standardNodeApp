@@ -4,7 +4,7 @@ const config = require('../tables.json');
 const multer = require('multer');
 const path = require('path');
 
-require('dotenv').config(); // Load environment variables from .env file
+const environment=require('dotenv').config({ path: `.env` }); // Load environment variables from .env file
 
 
 
@@ -32,7 +32,7 @@ const getUsersData = async () => {
 
 // posting users
 const postUsersData = async (req, res) => {
-    const saltRounds = process.env.SALT_ROUNDS ;
+    const saltRounds = environment.SALT_ROUNDS ;
 
     try {
         const hashedPassword = await bcrypt.hash(req.body.password,parseInt(saltRounds));

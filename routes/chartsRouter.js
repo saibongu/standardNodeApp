@@ -23,6 +23,17 @@ router.post('/postImagePath', cors(corsOptions), service.upload.single('image'),
     res.status(500).json({ error: 'An error occurred while fetching user data.' });
   }
 });
+
+//get router
+
+router.get('/getImages', cors(corsOptions), async (req, res) => {
+  try {
+      const imagesData = await service.getImages(req, res);
+      res.status(200).json(imagesData);
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while fetching images.' });
+  }
+});
 //post-barChart
 router.post('/postBarChartData', cors(corsOptions), async (req, res) => {
   try {
@@ -126,9 +137,5 @@ router.get('/getImages', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
-
-
 
 module.exports = router;

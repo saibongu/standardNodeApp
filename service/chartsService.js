@@ -50,7 +50,33 @@ const postImage = async (req, res) => {
     }
 };
 
+//get images 
+const getImages = async (req, res) => {
+    try {
+        const query = `SELECT * FROM ${config.tables.images}`;
+        
+        const data = await new Promise((resolve, reject) => {
+            connection.query(query, (err, data) => {
+                if (err) {
+                    console.error(err);
+                    reject('Failed to fetch data.');
+                } else {
+                    resolve(data);
+                }
+            });
+        });
 
+        const response = {
+            status: 'Data fetched successfully',
+            data,
+        };
+
+        res.status(200).json(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'Error', message: 'Failed to fetch data.' });
+    }
+};
 //post-bar charts
 const postBarChartData = async (req, res) => {
     try {
@@ -156,7 +182,6 @@ const getPieChartData = async (req, res) => {
         res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
     }
 };
-
 //post-tabs
 const postTabsData = async (req, res) => {
     try {
@@ -185,7 +210,6 @@ const postTabsData = async (req, res) => {
         res.status(500).json({ status: 'Error', message: 'Failed to insert JSON data.' });
     }
 };
-
 //get tabs
 const getTabsData = async (req, res) => {
     try {
@@ -209,7 +233,6 @@ const getTabsData = async (req, res) => {
         res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
     }
 };
-
 //post-card
 const postCardData = async (req, res) => {
     try {
@@ -265,34 +288,59 @@ const getCardData = async (req, res) => {
 ///base 64 image
 
 
+// async function uploadImage(base64Image) {
+//   try {
+//     const binaryImage = Buffer.from(base64Image, 'base64');
+//     // const connection = await pool.getConnection();
+//     await connection.query('INSERT INTO imagees (data) VALUES (?)', [binaryImage]);
+//     // connection.release();
+//     return { message: 'Image uploaded successfully' };
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Internal Server Error');
+//   }
+// }
+
+
+// async function getAllImages() {
+//   try {
+//     // const connection = await pool.getConnection();
+//     const [rows] = await connection.query('SELECT * FROM imagees');
+  
+//     return rows;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Internal Server Error');
+//   }
+// }
+
+
+
 async function uploadImage(base64Image) {
   try {
+
     const binaryImage = Buffer.from(base64Image, 'base64');
-    // const connection = await pool.getConnection();
     await connection.query('INSERT INTO imagees (data) VALUES (?)', [binaryImage]);
-    // connection.release();
+
     return { message: 'Image uploaded successfully' };
   } catch (error) {
     console.error(error);
     throw new Error('Internal Server Error');
   }
 }
-
-
 async function getAllImages() {
-  try {
-    // const connection = await pool.getConnection();
-    const [rows] = await connection.query('SELECT * FROM imagees');
-  
-    return rows;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Internal Server Error');
+    try {
+      const [rows] = await connection.query('SELECT * FROM imagees');
+      if (!rows || rows.length === 0) {
+        return []; // Or handle the empty result case based on your requirements
+      }
+      return rows;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Internal Server Error');
+    }
   }
-}
-
-
-
+  
 module.exports = {
     getPieChartData,
     postPieChartData,
@@ -303,6 +351,8 @@ module.exports = {
     getCardData,
     postCardData,
     postImage,
-    upload,uploadImage,
-    getAllImages
+    upload,
+    uploadImage,
+    getAllImages,
+    getImages
 }
