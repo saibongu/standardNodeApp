@@ -159,10 +159,11 @@ const postPieChartData = async (req, res) => {
     }
 };
 
+
 //get pie chart data
 const getPieChartData = async (req, res) => {
     try {
-        const query = `SELECT * FROM ${config.tables.piecharts}`;
+        const query=`SELECT * FROM ${config.tables.piecharts}`;
         const rows = await new Promise((resolve, reject) => {
             connection.query(query, (err, rows) => {
                 if (err) {
@@ -263,27 +264,27 @@ const postCardData = async (req, res) => {
 };
 
 //get-card 
-const getCardData = async (req, res) => {
-    try {
-        const query = `SELECT * FROM ${config.tables.card}`;
-        const rows = await new Promise((resolve, reject) => {
-            connection.query(query, (err, rows) => {
-                if (err) {
-                    console.error(err);
-                    reject('Failed to retrieve data from MySQL.');
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
+// const getCardData = async (req, res) => {
+//     try {
+//         const query = `SELECT * FROM ${config.tables.card}`;
+//         const rows = await new Promise((resolve, reject) => {
+//             connection.query(query, (err, rows) => {
+//                 if (err) {
+//                     console.error(err);
+//                     reject('Failed to retrieve data from MySQL.');
+//                 } else {
+//                     resolve(rows);
+//                 }
+//             });
+//         });
 
-        const jsonData = rows.map((row) => JSON.parse(row.json_data));
-        res.status(200).json(jsonData);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
-    }
-};
+//         const jsonData = rows.map((row) => JSON.parse(row.json_data));
+//         res.status(200).json(jsonData);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ status: 'Error', message: 'Failed to retrieve data from MySQL.' });
+//     }
+// };
 
 ///base 64 image
 
@@ -348,7 +349,7 @@ module.exports = {
     postBarChartData,
     postTabsData,
     getTabsData,
-    getCardData,
+    // getCardData,
     postCardData,
     postImage,
     upload,

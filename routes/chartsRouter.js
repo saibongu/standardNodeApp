@@ -105,14 +105,14 @@ router.post('/postCardData', cors(corsOptions), async (req, res) => {
 });
 
 //get-card
-router.get('/getCardData', cors(corsOptions), async (req, res) => {
-  try {
-    const usersData = await service.getCardData(req, res);
-    res.status(200).json(usersData);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching user data.' });
-  }
-});
+// router.get('/getCardData', cors(corsOptions), async (req, res) => {
+//   try {
+//     const usersData = await service.getCardData(req, res);
+//     res.status(200).json(usersData);
+//   } catch (error) {
+//     res.status(500).json({ error: 'An error occurred while fetching user data.' });
+//   }
+// });
 
 
 //image base64
