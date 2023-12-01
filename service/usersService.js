@@ -97,7 +97,6 @@ const loginResponseData = async (req, res) => {
         }
 
         const hashedPasswordFromDb = result[0].password;
-        
 
         try {
             const passwordMatch = await bcrypt.compare(password, hashedPasswordFromDb);
@@ -107,67 +106,20 @@ const loginResponseData = async (req, res) => {
                     status: 'success',
                     response: result
                 };
-                res.send(data); 
-                res.status(401).send('Please enter valid username and password');
+                return res.send(data); // Use return to exit the function after sending the response
             }
         } catch (compareErr) {
             console.error(compareErr);
-            res.status(500).send('Error comparing passwords');
+            return res.status(500).send('Error comparing passwords');
         }
     } catch (err) {
         console.error(err);
-        res.status(400).send({ msg: err });
+        return res.status(400).send({ msg: err });
     }
 };
 
 
-// const loginResponseData = async (req, res) => {
-//     const { userName, password } = req.body;
-
-//     const query = `SELECT * FROM ${config.tables.usersData} WHERE userName = ?`;
-
-//     try {
-//         const result = await new Promise((resolve, reject) => {
-//             connection.query(query, [userName], (err, result) => {
-//                 if (err) {
-//                     reject(err);
-//                 } else {
-//                     resolve(result);
-//                 }
-//             });
-//         });
-
-//         if (result.length === 0) {
-//             return res.status(401).send('Please enter valid username and password');
-//         }
-
-//         const hashedPasswordFromDb = result[0].password;
-
-//         try {
-//             const passwordMatch = await bcrypt.compare(password, hashedPasswordFromDb);
-
-//             if (passwordMatch) {
-//                 const data = {
-//                     status: 'success',
-//                     response: result
-//                 };
-//                 res.send(data); // Send the response here
-//             } else {
-//                 res.status(401).send('Please enter valid username and password'); // Send the error response here
-//             }
-//         } catch (compareErr) {
-//             console.error(compareErr);
-//             res.status(500).send('Error comparing passwords');
-//         }
-//     } catch (err) {
-//         console.error(err);
-//         res.status(400).send({ msg: err });
-//     }
-// };
-
 // get table data 
-
-
 const getUsersTableData = async () => {
     try {
         console.log("getUsersTableData was called")

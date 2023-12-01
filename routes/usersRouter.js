@@ -49,6 +49,7 @@ router.get('/usersData', cors(corsOptions), async (req, res) => {
 });
 
 //user login
+//user login
 router.post('/login', cors(corsOptions), async (req, res) => {
     try {
         const usersData = await service.loginResponseData(req, res);
@@ -57,6 +58,7 @@ router.post('/login', cors(corsOptions), async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching user data.' });
     }
 });
+
 
 //table update
 router.put('/updateTableData/:id', cors(corsOptions), async (req, res) => {
